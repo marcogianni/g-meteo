@@ -1,9 +1,7 @@
 import Link from "next/link";
-import dynamic from "next/dynamic";
 
 import ThemeSwitcher from "@/components/ThemeSwitcher";
-
-const Logo = dynamic(() => import("@/components/Logo"), { ssr: false });
+import Logo from "@/components/Logo";
 
 export default function Navbar() {
   return (

@@ -19,7 +19,6 @@ export const request = async (params: RequestParams) => {
     params: {
       ...urlParams,
       appid: process.env.NEXT_PUBLIC_OPEN_WEATHER_API_KEY,
-      units: "metric",
     },
     data: body,
     headers,

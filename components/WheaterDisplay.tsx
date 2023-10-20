@@ -35,8 +35,14 @@ export default function WheaterDisplay(props: Props) {
           () => import(`/public/icons/${name}`, { ssr: true })
         );
         return (
-          <div className="h-36 w-36 p-4" key={single?.id}>
-            <SvgIcon key={index} className="fill-current" />
+          <div
+            className="flex flex-col p-4 items-center content-center"
+            key={single?.id}
+          >
+            <div className="h-24 w-24">
+              <SvgIcon key={index} className="fill-current" />
+            </div>
+            <div className="text-center capitalize">{single?.description}</div>
           </div>
         );
       })}

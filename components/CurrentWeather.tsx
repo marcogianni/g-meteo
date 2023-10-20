@@ -1,9 +1,11 @@
 "use client";
 
-import { CurretWeatherParams, getCurrentWeather } from "@/lib/api/weather";
-import useCurrentLanguage from "@/lib/hooks/useCurrentLanguage";
-import useGeolocation from "@/lib/hooks/useGeolocation";
 import { useQuery } from "@tanstack/react-query";
+
+import { Separator } from "@/components/ui/separator";
+import { Progress } from "@/components/ui/progress";
+import WheaterDisplay from "@/components/WheaterDisplay";
+import { Skeleton } from "@/components/ui/skeleton";
 import {
   Card,
   CardContent,
@@ -11,16 +13,16 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Separator } from "@/components/ui/separator";
-import { Progress } from "@/components/ui/progress";
-import WheaterDisplay from "@/components/WheaterDisplay";
-import { Skeleton } from "@/components/ui/skeleton";
+
+import { WeatherParams, getCurrentWeather } from "@/lib/api/weather";
+import useCurrentLanguage from "@/lib/hooks/useCurrentLanguage";
+import useGeolocation from "@/lib/hooks/useGeolocation";
 
 export default function CurrentWeather() {
   const lang = useCurrentLanguage();
   const { latitude, longitude } = useGeolocation();
 
-  const params: CurretWeatherParams = {
+  const params: WeatherParams = {
     // ! because query is enabled only when latitude and longitude are not null
     latlon: { lat: latitude!, lon: longitude! },
     lang,
@@ -35,15 +37,13 @@ export default function CurrentWeather() {
     },
   });
 
-  console.debug("CurrentWeather.data", data);
-  console.debug("TEST", { isLoading, isFetching, isError, data });
-
   const normaliseVisibility = (value: number | null) =>
     value == null ? 0 : ((value - 0) * 100) / 10_000;
 
   if (isLoading || isFetching || data == undefined) {
     return (
       <>
+        <h2 className="text-3xl font-bold tracking-tight">Today</h2>
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-12 mt-6">
           <Card className="col-span-5">
             <CardHeader>
@@ -53,12 +53,10 @@ export default function CurrentWeather() {
               <CardDescription>Current temperature</CardDescription>
             </CardHeader>
             <CardContent>
-              <Skeleton className="h-[40px] bg-current" />
+              <Skeleton className="h-[40px] bg-current opacity-20" />
             </CardContent>
           </Card>
-          <Card className="col-span-4">
-            {/* <Skeleton className="h-full bg-current" /> */}
-          </Card>
+          <Card className="col-span-4"></Card>
           <Card className="col-span-3">
             <CardHeader>
               <CardTitle>
@@ -83,7 +81,7 @@ export default function CurrentWeather() {
               <CardDescription>Between 0 - 100%</CardDescription>
             </CardHeader>
             <CardContent>
-              <Skeleton className="h-[96px] bg-current opacity-20" />
+              <Skeleton className="h-[72px] bg-current opacity-20" />
             </CardContent>
           </Card>
           <Card>
@@ -94,7 +92,7 @@ export default function CurrentWeather() {
               <CardDescription>Between 0 - 100%</CardDescription>
             </CardHeader>
             <CardContent>
-              <Skeleton className="h-[96px] bg-current opacity-20" />
+              <Skeleton className="h-[72px] bg-current opacity-20" />
             </CardContent>
           </Card>
           <Card>
@@ -105,7 +103,7 @@ export default function CurrentWeather() {
               <CardDescription>Distance in metres</CardDescription>
             </CardHeader>
             <CardContent>
-              <Skeleton className="h-[96px] bg-current opacity-20" />
+              <Skeleton className="h-[72px] bg-current opacity-20" />
             </CardContent>
           </Card>
         </div>
@@ -115,6 +113,12 @@ export default function CurrentWeather() {
 
   return (
     <>
+      <div className="flex items-center justify-between">
+        <h2 className="text-3xl font-bold tracking-tight">Today</h2>
+        <span className="text-lg font-bold">
+          {data?.name}, {data?.sys?.country}
+        </span>
+      </div>
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-12 mt-6">
         <Card className="col-span-5">
           <CardHeader>

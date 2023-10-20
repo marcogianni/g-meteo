@@ -1,6 +1,6 @@
 import { request } from "./config";
 
-export interface CurretWeatherParams {
+export interface WeatherParams {
   latlon: { lat: number; lon: number };
   lang: string | null;
 }
@@ -49,7 +49,7 @@ export interface CurrentWeather {
   cod: number;
 }
 
-export const getCurrentWeather = async (params: CurretWeatherParams) => {
+export const getCurrentWeather = async (params: WeatherParams) => {
   const { lat, lon } = params.latlon;
   const { lang } = params;
 
@@ -60,6 +60,7 @@ export const getCurrentWeather = async (params: CurretWeatherParams) => {
       lat,
       lon,
       lang,
+      units: "metric",
     },
   });
 

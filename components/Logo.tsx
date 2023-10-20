@@ -1,11 +1,6 @@
-"use client";
-
-import { GlobeIcon, LightningBoltIcon } from "@radix-ui/react-icons";
-import { useTheme } from "next-themes";
+import { GlobeIcon } from "@radix-ui/react-icons";
 
 export default function Logo() {
-  const { theme } = useTheme();
-
   return (
     <div className="flex items-center">
       <GlobeIcon className="h-8 w-8" />
