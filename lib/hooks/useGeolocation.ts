@@ -14,7 +14,11 @@ export type GeolocationState = {
 };
 
 export default function useGeolocation(
-  options: PositionOptions = {}
+  options: PositionOptions = {
+    enableHighAccuracy: false,
+    timeout: 5000,
+    maximumAge: Infinity,
+  }
 ): GeolocationState {
   const [state, setState] = useState<GeolocationState>({
     loading: true,
@@ -33,18 +37,20 @@ export default function useGeolocation(
 
   useEffect(() => {
     const onEvent = ({ coords, timestamp }: GeolocationPosition) => {
-      setState({
-        loading: false,
-        timestamp,
-        latitude: coords.latitude,
-        longitude: coords.longitude,
-        altitude: coords.altitude,
-        accuracy: coords.accuracy,
-        altitudeAccuracy: coords.altitudeAccuracy,
-        heading: coords.heading,
-        speed: coords.speed,
-        error: null,
-      });
+      if (state.loading) {
+        setState({
+          loading: false,
+          timestamp,
+          latitude: coords.latitude,
+          longitude: coords.longitude,
+          altitude: coords.altitude,
+          accuracy: coords.accuracy,
+          altitudeAccuracy: coords.altitudeAccuracy,
+          heading: coords.heading,
+          speed: coords.speed,
+          error: null,
+        });
+      }
     };
 
     const onEventError = (error: GeolocationPositionError) => {
@@ -62,16 +68,6 @@ export default function useGeolocation(
       onEventError,
       optionsRef.current
     );
-
-    const watchId = navigatorGeolocation.watchPosition(
-      onEvent,
-      onEventError,
-      optionsRef.current
-    );
-
-    return () => {
-      navigatorGeolocation.clearWatch(watchId);
-    };
   }, []);
 
   return state;

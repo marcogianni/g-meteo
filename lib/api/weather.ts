@@ -1,20 +1,15 @@
 import { request } from "./config";
 
-export type LatLon = {
-  lat: number;
-  lon: number;
-};
-
-export type CurretWeatherParams = {
-  latlon: LatLon;
-  lang: string;
-};
+export interface CurretWeatherParams {
+  latlon: { lat: number; lon: number };
+  lang: string | null;
+}
 
 export const getCurrentWeather = async (params: CurretWeatherParams) => {
   const { lat, lon } = params.latlon;
   const { lang } = params;
 
-  const [response, error] = await request({
+  return await request({
     url: "/weather",
     method: "GET",
     params: {
@@ -23,6 +18,4 @@ export const getCurrentWeather = async (params: CurretWeatherParams) => {
       lang,
     },
   });
-
-  return [response, error];
 };
