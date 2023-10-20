@@ -10,7 +10,7 @@ const getSnapshot = () => {
 };
 
 const getServerSnapshot = () => {
-  throw Error("usePreferredLanguage is a client-only hook");
+  return null;
 };
 
 export default function useCurrentLanguage() {
