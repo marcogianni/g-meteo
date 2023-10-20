@@ -13,8 +13,8 @@ import {
 } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { Progress } from "@/components/ui/progress";
-import Image from "next/image";
 import WheaterDisplay from "@/components/WheaterDisplay";
+import { Skeleton } from "@/components/ui/skeleton";
 
 export default function CurrentWeather() {
   const lang = useCurrentLanguage();
@@ -29,20 +29,94 @@ export default function CurrentWeather() {
   const { isLoading, isError, data, error, refetch, isFetching } = useQuery({
     queryKey: ["weather"],
     enabled: latitude != null && longitude != null,
+    refetchOnWindowFocus: false,
     queryFn: async () => {
       return await getCurrentWeather(params);
     },
   });
 
   console.debug("CurrentWeather.data", data);
+  console.debug("TEST", { isLoading, isFetching, isError, data });
 
   const normaliseVisibility = (value: number | null) =>
     value == null ? 0 : ((value - 0) * 100) / 10_000;
 
+  if (isLoading || isFetching || data == undefined) {
+    return (
+      <>
+        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-12 mt-6">
+          <Card className="col-span-5">
+            <CardHeader>
+              <CardTitle>
+                <div className="text-lg">Temperature</div>
+              </CardTitle>
+              <CardDescription>Current temperature</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <Skeleton className="h-[40px] bg-current" />
+            </CardContent>
+          </Card>
+          <Card className="col-span-4">
+            {/* <Skeleton className="h-full bg-current" /> */}
+          </Card>
+          <Card className="col-span-3">
+            <CardHeader>
+              <CardTitle>
+                <div className="text-lg">Felt Temperature</div>
+              </CardTitle>
+              <CardDescription>Felt temperature today</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <Skeleton className="h-[40px] bg-current opacity-20" />
+            </CardContent>
+          </Card>
+        </div>
+        <div className="mt-6 w-full">
+          <Separator />
+        </div>
+        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3 mt-6">
+          <Card>
+            <CardHeader>
+              <CardTitle>
+                <div className="text-lg">Humidity</div>
+              </CardTitle>
+              <CardDescription>Between 0 - 100%</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <Skeleton className="h-[96px] bg-current opacity-20" />
+            </CardContent>
+          </Card>
+          <Card>
+            <CardHeader>
+              <CardTitle>
+                <div className="text-lg">Clouds</div>
+              </CardTitle>
+              <CardDescription>Between 0 - 100%</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <Skeleton className="h-[96px] bg-current opacity-20" />
+            </CardContent>
+          </Card>
+          <Card>
+            <CardHeader>
+              <CardTitle>
+                <div className="text-lg">Visibility</div>
+              </CardTitle>
+              <CardDescription>Distance in metres</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <Skeleton className="h-[96px] bg-current opacity-20" />
+            </CardContent>
+          </Card>
+        </div>
+      </>
+    );
+  }
+
   return (
     <>
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-12 mt-6">
-        <Card className="bg-accent col-span-4">
+        <Card className="col-span-5">
           <CardHeader>
             <CardTitle>
               <div className="text-lg">Temperature</div>
@@ -57,6 +131,9 @@ export default function CurrentWeather() {
               </div>
             </div>
           </CardContent>
+        </Card>
+        <Card className="col-span-4">
+          <WheaterDisplay weather={data?.weather ?? []} />
         </Card>
         <Card className="col-span-3">
           <CardHeader>
@@ -73,9 +150,6 @@ export default function CurrentWeather() {
             </div>
           </CardContent>
         </Card>
-        <Card className="col-span-5">
-          <WheaterDisplay weather={data?.weather ?? []} />
-        </Card>
       </div>
       <div className="mt-6 w-full">
         <Separator />
@@ -89,10 +163,14 @@ export default function CurrentWeather() {
             <CardDescription>Between 0 - 100%</CardDescription>
           </CardHeader>
           <CardContent>
-            <div className="flex items-baseline">
-              <div className="text-4xl font-bold">{data?.main?.humidity}%</div>
+            <div>
+              <div className="flex items-baseline">
+                <div className="text-4xl font-bold">
+                  {data?.main?.humidity}%
+                </div>
+              </div>
+              <Progress className="mt-6" value={data?.main?.humidity} />
             </div>
-            <Progress className="mt-6" value={data?.main?.humidity} />
           </CardContent>
         </Card>
         <Card>
@@ -103,10 +181,12 @@ export default function CurrentWeather() {
             <CardDescription>Between 0 - 100%</CardDescription>
           </CardHeader>
           <CardContent>
-            <div className="flex items-baseline">
-              <div className="text-4xl font-bold">{data?.clouds?.all}%</div>
+            <div>
+              <div className="flex items-baseline">
+                <div className="text-4xl font-bold">{data?.clouds?.all}%</div>
+              </div>
+              <Progress className="mt-6" value={data?.clouds?.all} />
             </div>
-            <Progress className="mt-6" value={data?.clouds?.all} />
           </CardContent>
         </Card>
         <Card>
