@@ -17,6 +17,7 @@ import {
 import { WeatherParams, getCurrentWeather } from "@/lib/api/weather";
 import useCurrentLanguage from "@/lib/hooks/useCurrentLanguage";
 import useGeolocation from "@/lib/hooks/useGeolocation";
+import { DrawingPinFilledIcon } from "@radix-ui/react-icons";
 
 export default function CurrentWeather() {
   const lang = useCurrentLanguage();
@@ -24,13 +25,12 @@ export default function CurrentWeather() {
   console.debug("useGeolocation", { latitude, longitude, loading, err });
 
   const params: WeatherParams = {
-    // ! because query is enabled only when latitude and longitude are not null
     latlon: { lat: latitude!, lon: longitude! },
     lang,
   };
 
   const { isLoading, isError, data, error, refetch, isFetching } = useQuery({
-    queryKey: ["weather"],
+    queryKey: ["weather", latitude, longitude],
     enabled: latitude != null && longitude != null,
     refetchOnWindowFocus: false,
     queryFn: async () => {
@@ -116,7 +116,8 @@ export default function CurrentWeather() {
     <>
       <div className="flex items-center justify-between">
         <h2 className="text-3xl font-bold tracking-tight">Today</h2>
-        <span className="text-lg font-bold">
+        <span className="text-md font-semibold bg-primary p-1 pl-4 pr-4 rounded-full flex items-center gap-2 text-white">
+          <DrawingPinFilledIcon />
           {data?.name}, {data?.sys?.country}
         </span>
       </div>

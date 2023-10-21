@@ -31,7 +31,7 @@ export default function Forecast() {
   };
 
   const { isLoading, isError, data, error, refetch, isFetching } = useQuery({
-    queryKey: ["forecast"],
+    queryKey: ["forecast", latitude, longitude],
     enabled: latitude != null && longitude != null,
     refetchOnWindowFocus: false,
     queryFn: async () => {
