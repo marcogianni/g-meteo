@@ -20,7 +20,8 @@ import useGeolocation from "@/lib/hooks/useGeolocation";
 
 export default function CurrentWeather() {
   const lang = useCurrentLanguage();
-  const { latitude, longitude } = useGeolocation();
+  const { latitude, longitude, loading, error: err } = useGeolocation();
+  console.debug("useGeolocation", { latitude, longitude, loading, err });
 
   const params: WeatherParams = {
     // ! because query is enabled only when latitude and longitude are not null

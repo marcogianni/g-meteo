@@ -1,3 +1,5 @@
+import { useToast } from "@/components/ui/use-toast";
+import { ToastAction } from "@/components/ui/toast";
 import { useState, useEffect, useRef } from "react";
 
 export type GeolocationState = {
@@ -16,10 +18,11 @@ export type GeolocationState = {
 export default function useGeolocation(
   options: PositionOptions = {
     enableHighAccuracy: false,
-    timeout: 5000,
+    // timeout: 10000,
     maximumAge: Infinity,
   }
 ): GeolocationState {
+  const { toast } = useToast();
   const [state, setState] = useState<GeolocationState>({
     loading: true,
     accuracy: null,
@@ -59,6 +62,11 @@ export default function useGeolocation(
         loading: false,
         error: error.message,
       }));
+      toast({
+        title: "Action required",
+        description: error?.message,
+        variant: "destructive",
+      });
     };
 
     const navigatorGeolocation = navigator.geolocation as Geolocation;
