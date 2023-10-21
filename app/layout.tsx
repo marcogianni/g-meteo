@@ -33,7 +33,7 @@ export default function RootLayout({
           // enableSystem
           disableTransitionOnChange
         >
-          <ReactQueryProvider>
+          <ReactQueryProvider debug={false}>
             <Navbar />
             {children}
           </ReactQueryProvider>
