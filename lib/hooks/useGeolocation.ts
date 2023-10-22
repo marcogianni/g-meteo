@@ -76,6 +76,16 @@ export default function useGeolocation(
       onEventError,
       optionsRef.current
     );
+
+    const watchId = navigator.geolocation.watchPosition(
+      onEvent,
+      onEventError,
+      optionsRef.current
+    );
+
+    return () => {
+      navigator.geolocation.clearWatch(watchId);
+    };
   }, []);
 
   return state;

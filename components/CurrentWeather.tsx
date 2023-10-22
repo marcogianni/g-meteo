@@ -13,11 +13,11 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import GeolocationIndicator from "@/components/GeolocationIndicator";
 
 import { WeatherParams, getCurrentWeather } from "@/lib/api/weather";
 import useCurrentLanguage from "@/lib/hooks/useCurrentLanguage";
 import useGeolocation from "@/lib/hooks/useGeolocation";
-import { DrawingPinFilledIcon } from "@radix-ui/react-icons";
 
 export default function CurrentWeather() {
   const lang = useCurrentLanguage();
@@ -44,7 +44,14 @@ export default function CurrentWeather() {
   if (isLoading || isFetching || data == undefined) {
     return (
       <>
-        <h2 className="text-3xl font-bold tracking-tight">Today</h2>
+        <div className="flex items-center justify-between">
+          <h2 className="text-3xl font-bold tracking-tight">Today</h2>
+          <GeolocationIndicator
+            loading={loading}
+            city={data?.name}
+            country={data?.sys?.country}
+          />
+        </div>
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-12 mt-6">
           <Card className="col-span-5">
             <CardHeader>
@@ -116,10 +123,11 @@ export default function CurrentWeather() {
     <>
       <div className="flex items-center justify-between">
         <h2 className="text-3xl font-bold tracking-tight">Today</h2>
-        <span className="text-md font-semibold bg-primary p-1 pl-4 pr-4 rounded-full flex items-center gap-2 text-white">
-          <DrawingPinFilledIcon />
-          {data?.name}, {data?.sys?.country}
-        </span>
+        <GeolocationIndicator
+          loading={loading}
+          city={data?.name}
+          country={data?.sys?.country}
+        />
       </div>
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-12 mt-6">
         <Card className="col-span-5">
