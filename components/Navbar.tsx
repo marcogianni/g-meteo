@@ -2,6 +2,7 @@ import Link from "next/link";
 
 import ThemeSwitcher from "@/components/ThemeSwitcher";
 import Logo from "@/components/Logo";
+import { SearchLocation } from "@/components/SearchLocation";
 
 export default function Navbar() {
   return (
@@ -14,6 +15,8 @@ export default function Navbar() {
         </div>
 
         <div className="flex flex-1 items-center space-x-2 justify-end">
+          <SearchLocation />
+
           <ThemeSwitcher />
         </div>
       </div>
