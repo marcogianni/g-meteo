@@ -11,7 +11,7 @@ export default function GeolocationIndicator(props: Props) {
 
   if (loading) {
     return (
-      <span className="text-md font-semibold bg-primary p-1 pl-4 pr-4 rounded-full flex items-center gap-2 text-white">
+      <span className="text-md font-semibold bg-secondary p-1 pl-4 pr-4 rounded-full flex items-center gap-2 text-white">
         <ReloadIcon className="animate-spin" />
         Loading Geolocation
       </span>
