@@ -147,7 +147,11 @@ export default function CurrentWeather() {
           </CardContent>
         </Card>
         <Card className="col-span-4">
-          <WheaterDisplay weather={data?.weather ?? []} />
+          <div className="h-full w-full flex items-center justify-center">
+            <div className="flex flex-col p-4 items-center content-center">
+              <WheaterDisplay weather={data?.weather ?? []} />
+            </div>
+          </div>
         </Card>
         <Card className="col-span-3">
           <CardHeader>

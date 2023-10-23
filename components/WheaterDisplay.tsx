@@ -1,25 +1,10 @@
 // @ts-nocheck
 
+import { cn } from "@/lib/utils";
 import Lottie from "lottie-react";
 
-// TODO FIND WAY TO IMPORT DYNAMICALLY
-import ClearDay from "/public/lotties/clear-day.json";
-import ClearNight from "/public/lotties/clear-night.json";
-import PartlyCloudDay from "/public/lotties/partly-cloudy-day.json";
-import PartlyCloudNight from "/public/lotties/partly-cloudy-night.json";
-import Cloudy from "/public/lotties/cloudy.json";
-import Overcast from "/public/lotties/overcast.json";
-import ExtremeDayDrizzle from "/public/lotties/extreme-day-drizzle.json";
-import ExtremeNightDrizzle from "/public/lotties/extreme-night-drizzle.json";
-import PartlyCloudDayRain from "/public/lotties/partly-cloudy-day-rain.json";
-import PartlyCloudNightRain from "/public/lotties/partly-cloudy-night-rain.json";
-import ThunderstormsDayExtremeRain from "/public/lotties/thunderstorms-day-extreme-rain.json";
-import ThunderstormsNightExtremeRain from "/public/lotties/thunderstorms-night-extreme-rain.json";
-import OvercastDaySnow from "/public/lotties/overcast-day-snow.json";
-import OvercastNightSnow from "/public/lotties/overcast-night-snow.json";
-import Fog from "/public/lotties/fog.json";
-
 type Props = {
+  className?: string;
   weather: {
     description: string;
     icon: string;
@@ -29,57 +14,28 @@ type Props = {
 };
 
 export default function WheaterDisplay(props: Props) {
-  const { weather } = props;
+  const { weather, className = "" } = props;
   if (weather.length === 0) {
     return null;
   }
 
-  return (
-    <div className="h-full w-full flex items-center justify-center">
-      {weather.map((single, index) => {
-        const icon = single?.icon;
+  return weather.map((single, index) => {
+    const icon = single?.icon;
 
-        const availableIcons = Object.keys(wheaterIcons);
-        if (!availableIcons.includes(icon)) {
-          return null;
-        }
-        const File = wheaterIcons2?.[single?.icon];
+    const availableIcons = Object.keys(wheaterIcons);
+    if (!availableIcons.includes(icon)) {
+      return null;
+    }
 
-        return (
-          <div
-            className="flex flex-col p-4 items-center content-center"
-            key={single?.id}
-          >
-            <div className="h-28 w-28">
-              <Lottie animationData={File} loop={true} />
-            </div>
-          </div>
-        );
-      })}
-    </div>
-  );
+    const LottieFile = require(`/public/lotties/${wheaterIcons[icon]}`);
+
+    return (
+      <div className={cn("h-28 w-28", className)} key={single?.id}>
+        <Lottie animationData={LottieFile} loop={true} />
+      </div>
+    );
+  });
 }
-
-const wheaterIcons2 = {
-  "01d": ClearDay,
-  "01n": ClearNight,
-  "02d": PartlyCloudDay,
-  "02n": PartlyCloudNight,
-  "03d": Cloudy,
-  "03n": Cloudy,
-  "04d": Overcast,
-  "04n": Overcast,
-  "09d": ExtremeDayDrizzle,
-  "09n": ExtremeNightDrizzle,
-  "10d": PartlyCloudDayRain,
-  "10n": PartlyCloudNightRain,
-  "11d": ThunderstormsDayExtremeRain,
-  "11n": ThunderstormsNightExtremeRain,
-  "13d": OvercastDaySnow,
-  "13n": OvercastNightSnow,
-  "50d": Fog,
-  "50n": Fog,
-};
 
 const wheaterIcons = {
   "01d": "clear-day.json",
