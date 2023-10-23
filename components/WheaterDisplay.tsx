@@ -1,7 +1,23 @@
 // @ts-nocheck
 
-import dynamic from "next/dynamic";
-import { ReactNode } from "react";
+import Lottie from "lottie-react";
+
+// TODO FIND WAY TO IMPORT DYNAMICALLY
+import ClearDay from "/public/lotties/clear-day.json";
+import ClearNight from "/public/lotties/clear-night.json";
+import PartlyCloudDay from "/public/lotties/partly-cloudy-day.json";
+import PartlyCloudNight from "/public/lotties/partly-cloudy-night.json";
+import Cloudy from "/public/lotties/cloudy.json";
+import Overcast from "/public/lotties/overcast.json";
+import ExtremeDayDrizzle from "/public/lotties/extreme-day-drizzle.json";
+import ExtremeNightDrizzle from "/public/lotties/extreme-night-drizzle.json";
+import PartlyCloudDayRain from "/public/lotties/partly-cloudy-day-rain.json";
+import PartlyCloudNightRain from "/public/lotties/partly-cloudy-night-rain.json";
+import ThunderstormsDayExtremeRain from "/public/lotties/thunderstorms-day-extreme-rain.json";
+import ThunderstormsNightExtremeRain from "/public/lotties/thunderstorms-night-extreme-rain.json";
+import OvercastDaySnow from "/public/lotties/overcast-day-snow.json";
+import OvercastNightSnow from "/public/lotties/overcast-night-snow.json";
+import Fog from "/public/lotties/fog.json";
 
 type Props = {
   weather: {
@@ -27,22 +43,16 @@ export default function WheaterDisplay(props: Props) {
         if (!availableIcons.includes(icon)) {
           return null;
         }
-        const name: string = wheaterIcons?.[single?.icon];
-        if (!name) {
-          return null;
-        }
-        const SvgIcon: ReactNode = dynamic(
-          () => import(`/public/icons/${name}`, { ssr: true })
-        );
+        const File = wheaterIcons2?.[single?.icon];
+
         return (
           <div
             className="flex flex-col p-4 items-center content-center"
             key={single?.id}
           >
-            <div className="h-24 w-24">
-              <SvgIcon key={index} className="fill-current" />
+            <div className="h-28 w-28">
+              <Lottie animationData={File} loop={true} />
             </div>
-            <div className="text-center capitalize">{single?.description}</div>
           </div>
         );
       })}
@@ -50,23 +60,44 @@ export default function WheaterDisplay(props: Props) {
   );
 }
 
+const wheaterIcons2 = {
+  "01d": ClearDay,
+  "01n": ClearNight,
+  "02d": PartlyCloudDay,
+  "02n": PartlyCloudNight,
+  "03d": Cloudy,
+  "03n": Cloudy,
+  "04d": Overcast,
+  "04n": Overcast,
+  "09d": ExtremeDayDrizzle,
+  "09n": ExtremeNightDrizzle,
+  "10d": PartlyCloudDayRain,
+  "10n": PartlyCloudNightRain,
+  "11d": ThunderstormsDayExtremeRain,
+  "11n": ThunderstormsNightExtremeRain,
+  "13d": OvercastDaySnow,
+  "13n": OvercastNightSnow,
+  "50d": Fog,
+  "50n": Fog,
+};
+
 const wheaterIcons = {
-  "01d": "wi-day-sunny.svg",
-  "01n": "wi-night-clear.svg",
-  "02d": "wi-day-cloudy.svg",
-  "02n": "wi-night-alt-cloudy.svg",
-  "03d": "wi-cloud.svg",
-  "03n": "wi-cloud.svg",
-  "04d": "wi-cloudy.svg",
-  "04n": "wi-cloudy.svg",
-  "09d": "wi-day-showers.svg",
-  "09n": "wi-night-alt-showers.svg",
-  "10d": "wi-day-rain.svg",
-  "10n": "wi-night-alt-rain.svg",
-  "11d": "wi-day-thunderstorm.svg",
-  "11n": "wi-night-alt-thunderstorm.svg",
-  "13d": "wi-day-snow.svg",
-  "13n": "wi-night-alt-snow.svg",
-  "50d": "wi-day-fog.svg",
-  "50n": "wi-night-fog.svg",
+  "01d": "clear-day.json",
+  "01n": "clear-night.json",
+  "02d": "partly-cloudy-day.json",
+  "02n": "partly-cloudy-night.json",
+  "03d": "cloudy.json",
+  "03n": "cloudy.json",
+  "04d": "overcast.json",
+  "04n": "overcast.json",
+  "09d": "extreme-day-drizzle.json",
+  "09n": "extreme-day-drizzle.json",
+  "10d": "partly-cloudy-day-rain.json",
+  "10n": "partly-cloudy-night-rain.json",
+  "11d": "thunderstorms-day-extreme-rain.json",
+  "11n": "thunderstorms-night-extreme-rain.json",
+  "13d": "overcast-day-snow.json",
+  "13n": "overcast-night-snow.json",
+  "50d": "fog.json",
+  "50n": "fog.json",
 };
