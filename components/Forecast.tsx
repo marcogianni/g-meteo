@@ -54,8 +54,6 @@ export default function Forecast() {
     {}
   );
 
-  console.debug("groupedForecastByDay", groupedForecastByDay);
-
   return (
     <div className="mt-8 mb-8">
       <h2 className="text-3xl font-bold tracking-tight">Forecast</h2>

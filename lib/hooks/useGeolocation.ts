@@ -40,7 +40,7 @@ export default function useGeolocation(
 
   useEffect(() => {
     const onEvent = ({ coords, timestamp }: GeolocationPosition) => {
-      if (state.loading) {
+      if (state.loading && state.latitude === null) {
         setState({
           loading: false,
           timestamp,
