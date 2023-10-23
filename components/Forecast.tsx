@@ -48,11 +48,13 @@ export default function Forecast() {
     {}
   );
 
+  console.debug("groupedForecastByDay", groupedForecastByDay);
+
   return (
     <div className="mt-8 mb-8">
       <h2 className="text-3xl font-bold tracking-tight">Forecast</h2>
-      <Tabs defaultValue="Today" className="mt-4">
-        <TabsList className="grid w-full grid-cols-6 h-[auto]">
+      <Tabs defaultValue="Today" className="mt-6">
+        <TabsList className="grid w-full grid-cols-6 h-[auto] overflow-x-scroll">
           {groupedForecastByDay != undefined &&
             toPairs(groupedForecastByDay).map((item: any, index) => {
               const d = new Date(item[0]);
@@ -60,12 +62,12 @@ export default function Forecast() {
               const value = index === 0 ? "Today" : index.toString();
 
               return (
-                <TabsTrigger key={item[0]} value={value}>
-                  <div className="flex items-center content-center h-20">
-                    <div className="text-md">
-                      {index === 0 ? "Today" : dayName}
-                    </div>
-                  </div>
+                <TabsTrigger
+                  key={item[0]}
+                  value={value}
+                  className="flex items-center content-center h-12 text-md"
+                >
+                  {index === 0 ? "Today" : dayName}
                 </TabsTrigger>
               );
             })}

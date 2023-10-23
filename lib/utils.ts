@@ -6,11 +6,11 @@ export function cn(...inputs: ClassValue[]) {
 }
 
 export const days = [
+  "Sunday",
   "Monday",
   "Tuesday",
   "Wednesday",
   "Thursday",
   "Friday",
   "Saturday",
-  "Sunday",
 ];
