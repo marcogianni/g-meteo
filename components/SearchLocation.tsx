@@ -76,7 +76,7 @@ export function SearchLocation() {
       </div>
       <Button onClick={() => setDialogOpen(true)}>
         <ZoomInIcon className="h-6 w-6 text-white" />
-        <span className="pl-2">Search Location</span>
+        <span className="pl-2">Search</span>
       </Button>
       {paramLat !== null && (
         <Button color="secondary" onClick={() => router.push("/")}>
