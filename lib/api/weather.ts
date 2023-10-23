@@ -54,7 +54,7 @@ export const getCurrentWeather = async (params: WeatherParams) => {
   const { lang } = params;
 
   const data: CurrentWeather = await request({
-    url: "/weather",
+    url: "/data/2.5/weather",
     method: "GET",
     params: {
       lat,

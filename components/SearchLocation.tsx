@@ -1,23 +1,43 @@
 "use client";
 
-import { Input } from "@/components/ui/input";
 import { ZoomInIcon } from "@radix-ui/react-icons";
+import { Button } from "@/components/ui/button";
+
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
 
 export function SearchLocation() {
-  const handleClickSearch = () => {
+  const handleSearch = () => {
     console.log("search");
   };
 
   return (
-    <div
-      className="w-[140px] flex items-center relative"
-      onClick={handleClickSearch}
-    >
-      <ZoomInIcon className="absolute left-4 h-6 w-6 text-white" />
-      <Input
-        placeholder="Search..."
-        className="pl-12 pt-2 pb-2 text-md bg-primary white cursor-pointer placeholder:text-white border-primary"
-      />
+    <div className="flex items-center relative">
+      <Dialog>
+        <DialogTrigger>
+          <Button>
+            <ZoomInIcon className="h-6 w-6 text-white" />
+            <span className="pl-2">Search Location</span>
+          </Button>
+        </DialogTrigger>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle className="text-lg">Search Location</DialogTitle>
+            <DialogDescription>
+              Search by City name, state code (only for the US) and country code
+              divided by comma. Please use ISO 3166 country codes.
+            </DialogDescription>
+          </DialogHeader>
+          <Input placeholder="Search Location" onChange={handleSearch} />
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
