@@ -14,17 +14,15 @@ import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { debounce } from "@/lib/utils";
 
-import { getGeo } from "@/lib/api/geo";
+import { Geo, getGeo } from "@/lib/api/geo";
 import useCurrentLanguage from "@/lib/hooks/useCurrentLanguage";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
 
 export function SearchLocation() {
   const [dialogOpen, setDialogOpen] = useState(false);
-  const [open, setOpen] = useState(false);
-  const [value, setValue] = useState("");
+  const [results, setResults] = useState<Geo[]>([]);
 
-  const [results, setResults] = useState([]);
   const router = useRouter();
   const searchParams = useSearchParams();
   const paramLat = searchParams.get("lat");
@@ -34,13 +32,8 @@ export function SearchLocation() {
   const handleSearch = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     try {
-      const data = await getGeo(value);
-      const lat = data[0]?.lat;
-      const lon = data[0]?.lon;
+      const data: Geo[] = await getGeo(value);
       setResults(data);
-
-      // setDialogOpen(false);
-      // router.push(`/?lat=${lat}&lon=${lon}&lang=${lang}`);
     } catch (err) {
       console.debug("Error", err);
     }
@@ -48,9 +41,10 @@ export function SearchLocation() {
 
   const debounceQuery = debounce(handleSearch, 500);
 
-  const handleClick = (location) => {
+  const handleClick = (location: Geo) => {
     router.push(`/?lat=${location?.lat}&lon=${location?.lon}&lang=${lang}`);
     setDialogOpen(false);
+    setResults([]);
   };
 
   return (
@@ -66,7 +60,7 @@ export function SearchLocation() {
               </DialogDescription>
             </DialogHeader>
             <Input placeholder="Search Location" onChange={debounceQuery} />
-            <div>
+            <div className="flex items-center gap-2">
               {results.map((single) => (
                 <Badge
                   className="cursor-pointer"
