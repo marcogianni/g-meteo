@@ -16,7 +16,6 @@ export default function Navbar() {
 
         <div className="flex flex-1 items-center space-x-2 justify-end">
           <SearchLocation />
-
           <ThemeSwitcher />
         </div>
       </div>

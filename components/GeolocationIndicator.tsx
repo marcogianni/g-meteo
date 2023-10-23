@@ -9,6 +9,8 @@ type Props = {
 export default function GeolocationIndicator(props: Props) {
   const { loading, city, country } = props;
 
+  console.debug("GeolocationIndicator", { loading, city, country });
+
   if (loading) {
     return (
       <span className="text-md font-semibold bg-secondary p-1 pl-4 pr-4 rounded-full flex items-center gap-2 text-white">

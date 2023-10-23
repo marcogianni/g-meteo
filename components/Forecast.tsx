@@ -1,15 +1,10 @@
 "use client";
 
+import { useSearchParams } from "next/navigation";
 import { toPairs } from "ramda";
 import { useQuery } from "@tanstack/react-query";
 
-import {
-  Table,
-  TableBody,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
+import { Table, TableBody } from "@/components/ui/table";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import ForecastRow from "@/components/ForecastRow";
 
@@ -21,17 +16,25 @@ import useGeolocation from "@/lib/hooks/useGeolocation";
 import { days } from "@/lib/utils";
 
 export default function Forecast() {
+  const searchParams = useSearchParams();
+
+  const paramLat = searchParams.get("lat");
+  const paramLon = searchParams.get("lon");
+  const paramLang = searchParams.get("lang");
+
   const lang = useCurrentLanguage();
   const { latitude, longitude } = useGeolocation();
 
   const params: WeatherParams = {
-    // ! because query is enabled only when latitude and longitude are not null
-    latlon: { lat: latitude!, lon: longitude! },
-    lang,
+    latlon: {
+      lat: Number(paramLat) || latitude!,
+      lon: Number(paramLon) || longitude!,
+    },
+    lang: paramLang ?? lang,
   };
 
   const { isLoading, isError, data, error, refetch, isFetching } = useQuery({
-    queryKey: ["forecast", latitude, longitude],
+    queryKey: ["forecast", paramLat ?? latitude, paramLon ?? longitude],
     enabled: latitude != null && longitude != null,
     refetchOnWindowFocus: false,
     queryFn: async () => {

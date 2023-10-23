@@ -1,6 +1,7 @@
 "use client";
 
 import { useQuery } from "@tanstack/react-query";
+import { useSearchParams } from "next/navigation";
 
 import { Separator } from "@/components/ui/separator";
 import { Progress } from "@/components/ui/progress";
@@ -20,17 +21,25 @@ import useCurrentLanguage from "@/lib/hooks/useCurrentLanguage";
 import useGeolocation from "@/lib/hooks/useGeolocation";
 
 export default function CurrentWeather() {
+  const searchParams = useSearchParams();
+
+  const paramLat = searchParams.get("lat");
+  const paramLon = searchParams.get("lon");
+  const paramLang = searchParams.get("lang");
+
   const lang = useCurrentLanguage();
   const { latitude, longitude, loading, error: err } = useGeolocation();
-  console.debug("useGeolocation", { latitude, longitude, loading, err });
 
   const params: WeatherParams = {
-    latlon: { lat: latitude!, lon: longitude! },
-    lang,
+    latlon: {
+      lat: Number(paramLat) || latitude!,
+      lon: Number(paramLon) || longitude!,
+    },
+    lang: paramLang ?? lang,
   };
 
   const { isLoading, isError, data, error, refetch, isFetching } = useQuery({
-    queryKey: ["weather", latitude, longitude],
+    queryKey: ["weather", paramLat ?? latitude, paramLon ?? longitude],
     enabled: latitude != null && longitude != null,
     refetchOnWindowFocus: false,
     queryFn: async () => {
@@ -118,6 +127,8 @@ export default function CurrentWeather() {
       </>
     );
   }
+
+  console.debug("CurrentWeather", data);
 
   return (
     <>
