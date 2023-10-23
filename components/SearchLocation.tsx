@@ -9,7 +9,6 @@ import {
   DialogDescription,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { debounce } from "@/lib/utils";
@@ -21,6 +20,10 @@ import { useState } from "react";
 
 export function SearchLocation() {
   const [dialogOpen, setDialogOpen] = useState(false);
+  const [open, setOpen] = useState(false);
+  const [value, setValue] = useState("");
+
+  const [results, setResults] = useState([]);
   const router = useRouter();
   const searchParams = useSearchParams();
   const paramLat = searchParams.get("lat");
@@ -29,16 +32,17 @@ export function SearchLocation() {
 
   const handleSearch = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
-    const data = await getGeo(value);
-    const lat = data[0].lat;
-    const lon = data[0].lon;
+    try {
+      const data = await getGeo(value);
+      const lat = data[0].lat;
+      const lon = data[0].lon;
+      setResults(data);
 
-    if (lat == null || lon == null) {
-      return null;
+      setDialogOpen(false);
+      router.push(`/?lat=${lat}&lon=${lon}&lang=${lang}`);
+    } catch (err) {
+      console.debug("Error", err);
     }
-
-    setDialogOpen(false);
-    router.push(`/?lat=${lat}&lon=${lon}&lang=${lang}`);
   };
 
   const debounceQuery = debounce(handleSearch, 500);
