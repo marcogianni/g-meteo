@@ -3,7 +3,13 @@
 import { toPairs } from "ramda";
 import { useQuery } from "@tanstack/react-query";
 
-import { Table, TableBody } from "@/components/ui/table";
+import {
+  Table,
+  TableBody,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import ForecastRow from "@/components/ForecastRow";
 

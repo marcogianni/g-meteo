@@ -17,10 +17,10 @@ export default function ForecastRow(props: Props) {
   return (
     <TableRow
       key={weatherItem?.dt_txt}
-      className="mt-4 flex justify-around items-center"
+      className="flex justify-around items-center"
     >
       <TableCell className="font-medium">
-        <div className="h-20 flex items-center text-lg tabular-nums">
+        <div className="h-20 flex items-center text-lg tabular-nums w-20 justify-center">
           {date}
         </div>
       </TableCell>
