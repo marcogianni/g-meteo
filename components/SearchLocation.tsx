@@ -10,6 +10,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { debounce } from "@/lib/utils";
 
@@ -34,18 +35,23 @@ export function SearchLocation() {
     const value = e.target.value;
     try {
       const data = await getGeo(value);
-      const lat = data[0].lat;
-      const lon = data[0].lon;
+      const lat = data[0]?.lat;
+      const lon = data[0]?.lon;
       setResults(data);
 
-      setDialogOpen(false);
-      router.push(`/?lat=${lat}&lon=${lon}&lang=${lang}`);
+      // setDialogOpen(false);
+      // router.push(`/?lat=${lat}&lon=${lon}&lang=${lang}`);
     } catch (err) {
       console.debug("Error", err);
     }
   };
 
   const debounceQuery = debounce(handleSearch, 500);
+
+  const handleClick = (location) => {
+    router.push(`/?lat=${location?.lat}&lon=${location?.lon}&lang=${lang}`);
+    setDialogOpen(false);
+  };
 
   return (
     <>
@@ -60,6 +66,17 @@ export function SearchLocation() {
               </DialogDescription>
             </DialogHeader>
             <Input placeholder="Search Location" onChange={debounceQuery} />
+            <div>
+              {results.map((single) => (
+                <Badge
+                  className="cursor-pointer"
+                  key={single?.name}
+                  onClick={() => handleClick(single)}
+                >
+                  {single?.name}
+                </Badge>
+              ))}
+            </div>
           </DialogContent>
         </Dialog>
       </div>
