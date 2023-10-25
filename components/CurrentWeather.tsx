@@ -30,17 +30,20 @@ export default function CurrentWeather() {
   const lang = useCurrentLanguage();
   const { latitude, longitude, loading, error: err } = useGeolocation();
 
+  const currentLat = Number(paramLat) || latitude!;
+  const currentLon = Number(paramLon) || longitude!;
+
   const params: WeatherParams = {
     latlon: {
-      lat: Number(paramLat) || latitude!,
-      lon: Number(paramLon) || longitude!,
+      lat: currentLat,
+      lon: currentLon,
     },
     lang: paramLang ?? lang,
   };
 
   const { isLoading, isError, data, error, refetch, isFetching } = useQuery({
     queryKey: ["weather", paramLat ?? latitude, paramLon ?? longitude],
-    enabled: latitude != null && longitude != null,
+    enabled: currentLat != null && currentLon != null,
     refetchOnWindowFocus: false,
     queryFn: async () => {
       return await getCurrentWeather(params);
@@ -51,91 +54,15 @@ export default function CurrentWeather() {
     value == null ? 0 : ((value - 0) * 100) / 10_000;
 
   if (isLoading || isFetching || data == undefined) {
-    return (
-      <>
-        <div className="flex items-center justify-between">
-          <h2 className="text-3xl font-bold tracking-tight">Today</h2>
-          <GeolocationIndicator
-            loading={loading}
-            city={data?.name}
-            country={data?.sys?.country}
-          />
-        </div>
-        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-12 mt-6">
-          <Card className="col-span-5">
-            <CardHeader>
-              <CardTitle>
-                <div className="text-lg">Temperature</div>
-              </CardTitle>
-              <CardDescription>Current temperature</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <Skeleton className="h-[40px] bg-current opacity-20" />
-            </CardContent>
-          </Card>
-          <Card className="col-span-4"></Card>
-          <Card className="col-span-3">
-            <CardHeader>
-              <CardTitle>
-                <div className="text-lg">Felt Temperature</div>
-              </CardTitle>
-              <CardDescription>Felt temperature today</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <Skeleton className="h-[40px] bg-current opacity-20" />
-            </CardContent>
-          </Card>
-        </div>
-        <div className="mt-6 w-full">
-          <Separator />
-        </div>
-        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3 mt-6">
-          <Card>
-            <CardHeader>
-              <CardTitle>
-                <div className="text-lg">Humidity</div>
-              </CardTitle>
-              <CardDescription>Between 0 - 100%</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <Skeleton className="h-[72px] bg-current opacity-20" />
-            </CardContent>
-          </Card>
-          <Card>
-            <CardHeader>
-              <CardTitle>
-                <div className="text-lg">Clouds</div>
-              </CardTitle>
-              <CardDescription>Between 0 - 100%</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <Skeleton className="h-[72px] bg-current opacity-20" />
-            </CardContent>
-          </Card>
-          <Card>
-            <CardHeader>
-              <CardTitle>
-                <div className="text-lg">Visibility</div>
-              </CardTitle>
-              <CardDescription>Distance in metres</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <Skeleton className="h-[72px] bg-current opacity-20" />
-            </CardContent>
-          </Card>
-        </div>
-      </>
-    );
+    return <LoadingCurrentWeather />;
   }
-
-  console.debug("CurrentWeather", data);
 
   return (
     <>
       <div className="flex items-center justify-between">
         <h2 className="text-3xl font-bold tracking-tight">Today</h2>
         <GeolocationIndicator
-          loading={loading}
+          loading={isLoading || isFetching || data == undefined}
           city={data?.name}
           country={data?.sys?.country}
         />
@@ -239,3 +166,77 @@ export default function CurrentWeather() {
     </>
   );
 }
+
+const LoadingCurrentWeather = () => {
+  return (
+    <>
+      <div className="flex items-center justify-between">
+        <h2 className="text-3xl font-bold tracking-tight">Today</h2>
+        <GeolocationIndicator loading={true} city={null} country={null} />
+      </div>
+      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-12 mt-6">
+        <Card className="col-span-5">
+          <CardHeader>
+            <CardTitle>
+              <div className="text-lg">Temperature</div>
+            </CardTitle>
+            <CardDescription>Current temperature</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <Skeleton className="h-[40px] bg-current opacity-20" />
+          </CardContent>
+        </Card>
+        <Card className="col-span-4"></Card>
+        <Card className="col-span-3">
+          <CardHeader>
+            <CardTitle>
+              <div className="text-lg">Felt Temperature</div>
+            </CardTitle>
+            <CardDescription>Felt temperature today</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <Skeleton className="h-[40px] bg-current opacity-20" />
+          </CardContent>
+        </Card>
+      </div>
+      <div className="mt-6 w-full">
+        <Separator />
+      </div>
+      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3 mt-6">
+        <Card>
+          <CardHeader>
+            <CardTitle>
+              <div className="text-lg">Humidity</div>
+            </CardTitle>
+            <CardDescription>Between 0 - 100%</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <Skeleton className="h-[72px] bg-current opacity-20" />
+          </CardContent>
+        </Card>
+        <Card>
+          <CardHeader>
+            <CardTitle>
+              <div className="text-lg">Clouds</div>
+            </CardTitle>
+            <CardDescription>Between 0 - 100%</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <Skeleton className="h-[72px] bg-current opacity-20" />
+          </CardContent>
+        </Card>
+        <Card>
+          <CardHeader>
+            <CardTitle>
+              <div className="text-lg">Visibility</div>
+            </CardTitle>
+            <CardDescription>Distance in metres</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <Skeleton className="h-[72px] bg-current opacity-20" />
+          </CardContent>
+        </Card>
+      </div>
+    </>
+  );
+};

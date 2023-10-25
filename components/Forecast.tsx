@@ -25,17 +25,20 @@ export default function Forecast() {
   const lang = useCurrentLanguage();
   const { latitude, longitude } = useGeolocation();
 
+  const currentLat = Number(paramLat) || latitude!;
+  const currentLon = Number(paramLon) || longitude!;
+
   const params: WeatherParams = {
     latlon: {
-      lat: Number(paramLat) || latitude!,
-      lon: Number(paramLon) || longitude!,
+      lat: currentLat,
+      lon: currentLon,
     },
     lang: paramLang ?? lang,
   };
 
   const { isLoading, isError, data, error, refetch, isFetching } = useQuery({
     queryKey: ["forecast", paramLat ?? latitude, paramLon ?? longitude],
-    enabled: latitude != null && longitude != null,
+    enabled: currentLat != null && currentLon != null,
     refetchOnWindowFocus: false,
     queryFn: async () => {
       return await getForecast(params);
